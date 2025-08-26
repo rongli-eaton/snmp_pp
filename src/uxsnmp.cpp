@@ -40,6 +40,7 @@
 
 #include <libsnmp.h>
 
+#include "include/snmp_pp/selecttopool.h"
 //-----[ includes ]----------------------------------------------------
 
 #if defined (CPU) && CPU == PPC603
@@ -226,7 +227,7 @@ long Snmp::MyMakeReqId()
       struct timeval tv;
       tv.tv_sec = 0;
       tv.tv_usec = 100;
-      select(0, 0, 0, 0, &tv);
+      my_select(0, 0, 0, 0, &tv);
       eventListHolder->snmpEventList()->lock();
     }
   } while (eventListHolder->snmpEventList()->GetEntry(rid));
@@ -2117,12 +2118,12 @@ int Snmp::engine_id_discovery(OctetStr &engine_id,
     if ((nfound > 0) && (readfds.revents & POLLIN))
 	something_to_receive = true;
 #else
-    fd_set readfds;
-    FD_ZERO(&readfds);
-    FD_SET(sock, &readfds);
+    fd_my_set readfds;
+    MY_FD_ZERO(&readfds);
+    MY_FD_SET(sock, &readfds);
 
-    nfound = select((int)(sock + 1), &readfds, NULL, NULL, &fd_timeout);
-    if ((nfound > 0) && (FD_ISSET(sock, &readfds)))
+    nfound = my_select((int)(sock + 1), &readfds, NULL, NULL, &fd_timeout);
+    if ((nfound > 0) && (MY_FD_ISSET(sock, &readfds)))
 	something_to_receive = true;
 #endif
 
@@ -2276,12 +2277,12 @@ int Snmp::broadcast_discovery(UdpAddressCollection &addresses,
     if ((nfound > 0) && (readfds.revents & POLLIN))
 	something_to_receive = true;
 #else
-    fd_set readfds;
-    FD_ZERO(&readfds);
-    FD_SET(sock, &readfds);
+    fd_my_set readfds;
+    MY_FD_ZERO(&readfds);
+    MY_FD_SET(sock, &readfds);
 
-    nfound = select((int)(sock + 1), &readfds, NULL, NULL, &fd_timeout);
-    if ((nfound > 0) && (FD_ISSET(sock, &readfds)))
+    nfound = my_select((int)(sock + 1), &readfds, NULL, NULL, &fd_timeout);
+    if ((nfound > 0) && (MY_FD_ISSET(sock, &readfds)))
 	something_to_receive = true;
 #endif
 

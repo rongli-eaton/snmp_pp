@@ -220,4 +220,6 @@ extern "C" int strcasecmp(const char *s1, const char *s2);
 # include <iostream.h>
 #endif
 
+#include "snmp_pp/selecttopool.h"
+
 #endif /* ?__LIBSNMP_H_INCLUDED__ */

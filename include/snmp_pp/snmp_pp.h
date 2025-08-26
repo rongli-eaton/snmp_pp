@@ -74,5 +74,6 @@
 #include "snmp_pp/eventlist.h"
 #include "snmp_pp/eventlistholder.h"
 #include "snmp_pp/log.h"
+#include "snmp_pp/selecttopool.h"
 
 #endif //_SNMP_PP_H_

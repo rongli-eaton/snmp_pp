@@ -70,9 +70,9 @@ class DLLOPT EventListHolder
   bool GetFdArray(struct pollfd *readfds, int &remaining);
 #endif
   void SNMPGetFdSets(int &  maxfds,
-		     fd_set & readfds,
-		     fd_set & writefds,
-		     fd_set & exceptfds);
+		     fd_my_set & readfds,
+		     fd_my_set & writefds,
+		     fd_my_set & exceptfds);
 
   //---------[ Main Loop ]------------------------------------------
   /**

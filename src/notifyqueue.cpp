@@ -699,14 +699,14 @@ int CNotifyEventQueue::HandleEvents(const struct pollfd *readfds,
 
 #else
 
-void CNotifyEventQueue::GetFdSets(int &maxfds, fd_set &readfds,
-                                  fd_set &/*writefds*/,
-                                  fd_set &/*exceptfds*/)
+void CNotifyEventQueue::GetFdSets(int &maxfds, fd_my_set &readfds,
+                                  fd_my_set &/*writefds*/,
+                                  fd_my_set &/*exceptfds*/)
 {
   SnmpSynchronize _synchronize(*this); // REENTRANT
   if (m_notify_fd != INVALID_SOCKET)
   {
-    FD_SET(m_notify_fd, &readfds);
+    MY_FD_SET(m_notify_fd, &readfds);
     if (maxfds < SAFE_INT_CAST(m_notify_fd + 1))
       maxfds = SAFE_INT_CAST(m_notify_fd + 1);
   }
@@ -714,9 +714,9 @@ void CNotifyEventQueue::GetFdSets(int &maxfds, fd_set &readfds,
 }
 
 int CNotifyEventQueue::HandleEvents(const int /*maxfds*/,
-                                    const fd_set &readfds,
-                                    const fd_set &/*writefds*/,
-                                    const fd_set &/*exceptfds*/)
+                                    const fd_my_set &readfds,
+                                    const fd_my_set &/*writefds*/,
+                                    const fd_my_set &/*exceptfds*/)
 {
   SnmpSynchronize _synchronize(*this); // REENTRANT
   int status = SNMP_CLASS_SUCCESS;
@@ -728,7 +728,7 @@ int CNotifyEventQueue::HandleEvents(const int /*maxfds*/,
   SnmpTarget *target = NULL;
 
   // pull the notifiaction off the socket
-  if (FD_ISSET(m_notify_fd, (fd_set*)&readfds)) {
+  if (MY_FD_ISSET(m_notify_fd, (fd_my_set*)&readfds)) {
     status = receive_snmp_notification(m_notify_fd, *m_snmpSession,
                                        pdu, &target);
 

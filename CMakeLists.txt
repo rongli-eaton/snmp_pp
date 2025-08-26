@@ -472,6 +472,7 @@ set (MY_SRC_FILES
   src/uxsnmp.cpp
   src/v3.cpp
   src/vb.cpp
+  src/selecttopool.cpp
 )
 
 if (NOT WIN32)

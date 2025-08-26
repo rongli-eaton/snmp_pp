@@ -66,7 +66,7 @@
 
 #ifndef WIN32
 #if !(defined CPU && CPU == PPC603)
-#include <sys/time.h>	// time stuff and fd_set
+#include <sys/time.h>	// time stuff and fd_my_set
 #endif
 #endif
 
@@ -164,12 +164,12 @@ class DLLOPT CSNMPMessageQueue: public CEvents
     int HandleEvents(const struct pollfd *readfds, const int fds);
 #else
   // set up parameters for select
-    void GetFdSets(int &maxfds, fd_set &readfds, fd_set &writefds,
-		  fd_set &exceptfds);
+    void GetFdSets(int &maxfds, fd_my_set &readfds, fd_my_set &writefds,
+		  fd_my_set &exceptfds);
     int HandleEvents(const int maxfds,
-		     const fd_set &readfds,
-		     const fd_set &writefds,
-		     const fd_set &exceptfds);
+		     const fd_my_set &readfds,
+		     const fd_my_set &writefds,
+		     const fd_my_set &exceptfds);
 #endif
 
   // return number of outstanding messages

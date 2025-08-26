@@ -190,15 +190,15 @@ int CEventList::HandleEvents(const struct pollfd *readfds, const int fds)
 
 #else
 
-void CEventList::GetFdSets(int &maxfds, fd_set &readfds, fd_set &writefds,
-			   fd_set &exceptfds) REENTRANT ({
+void CEventList::GetFdSets(int &maxfds, fd_my_set&readfds, fd_my_set&writefds,
+    fd_my_set&exceptfds) REENTRANT ({
 
   CEventListElt *msgEltPtr = m_head.GetNext();
 
   maxfds = 0;
-  FD_ZERO(&readfds);
-  FD_ZERO(&writefds);
-  FD_ZERO(&exceptfds);
+  MY_FD_ZERO(&readfds);
+  MY_FD_ZERO(&writefds);
+  MY_FD_ZERO(&exceptfds);
   while (msgEltPtr) {
     if (msgEltPtr->GetEvents()->GetCount()) {
       msgEltPtr->GetEvents()->GetFdSets(maxfds, readfds, writefds, exceptfds);
@@ -208,9 +208,9 @@ void CEventList::GetFdSets(int &maxfds, fd_set &readfds, fd_set &writefds,
 })
 
 int CEventList::HandleEvents(const int maxfds,
-			     const fd_set &readfds,
-			     const fd_set &writefds,
-			     const fd_set &exceptfds)
+			     const fd_my_set &readfds,
+			     const fd_my_set &writefds,
+			     const fd_my_set &exceptfds)
 {
   lock();
   CEventListElt *msgEltPtr = m_head.GetNext();

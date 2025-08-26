@@ -201,9 +201,9 @@ UdId CUDEventQueue::MakeId()
 }
 
 void CUDEventQueue::GetFdSets(int &maxfds,
-                              fd_set &readfds,
-                              fd_set &writefds,
-                              fd_set &exceptfds) REENTRANT (
+                              fd_my_set &readfds,
+                              fd_my_set &writefds,
+                              fd_my_set &exceptfds) REENTRANT (
 {
   CUDEventQueueElt *msgEltPtr = m_head.GetNext();
 
@@ -211,9 +211,9 @@ void CUDEventQueue::GetFdSets(int &maxfds,
   {
     int fd = msgEltPtr->GetUDEvent()->GetFd();
     UdInputMask mask = msgEltPtr->GetUDEvent()->GetMask();
-    if (mask & UdInputReadMask)   FD_SET(fd, &readfds);
-    if (mask & UdInputWriteMask)  FD_SET(fd, &writefds);
-    if (mask & UdInputExceptMask) FD_SET(fd, &exceptfds);
+    if (mask & UdInputReadMask)   MY_FD_SET(fd, &readfds);
+    if (mask & UdInputWriteMask)  MY_FD_SET(fd, &writefds);
+    if (mask & UdInputExceptMask) MY_FD_SET(fd, &exceptfds);
     if (maxfds < (fd + 1))
       maxfds = fd + 1;
     msgEltPtr = msgEltPtr->GetNext();
@@ -221,9 +221,9 @@ void CUDEventQueue::GetFdSets(int &maxfds,
 })
 
 int CUDEventQueue::HandleEvents(const int maxfds,
-				const fd_set &readfds,
-				const fd_set &writefds,
-				const fd_set &exceptfds) REENTRANT (
+				const fd_my_set &readfds,
+				const fd_my_set &writefds,
+				const fd_my_set &exceptfds) REENTRANT (
 {
   CUDEventQueueElt *msgEltPtr = m_head.GetNext();
 
@@ -232,9 +232,9 @@ int CUDEventQueue::HandleEvents(const int maxfds,
     int fd = msgEltPtr->GetUDEvent()->GetFd();
     UdInputMask mask = msgEltPtr->GetUDEvent()->GetMask();
 
-    if (((mask & UdInputReadMask)   && FD_ISSET(fd, &readfds))   ||
-        ((mask & UdInputWriteMask)  && FD_ISSET(fd, &writefds))  ||
-        ((mask & UdInputExceptMask) && FD_ISSET(fd, &exceptfds)))
+    if (((mask & UdInputReadMask)   && MY_FD_ISSET(fd, &readfds))   ||
+        ((mask & UdInputWriteMask)  && MY_FD_ISSET(fd, &writefds))  ||
+        ((mask & UdInputExceptMask) && MY_FD_ISSET(fd, &exceptfds)))
       msgEltPtr->GetUDEvent()->Callback();
 
     msgEltPtr = msgEltPtr->GetNext();

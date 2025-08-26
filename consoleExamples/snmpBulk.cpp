@@ -45,7 +45,7 @@
 */
 
 #include <libsnmp.h>
-
+#include "snmp_pp/selecttopool.h"
 #include "snmp_pp/snmp_pp.h"
 
 #ifdef WIN32

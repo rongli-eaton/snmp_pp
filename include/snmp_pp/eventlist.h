@@ -69,7 +69,7 @@
 #include <time.h>
 #else
 #if !(defined CPU && CPU == PPC603)
-#include <sys/time.h>  // time stuff and fd_set
+#include <sys/time.h>  // time stuff and fd_my_set
 #endif
 #include <float.h>
 #endif
@@ -102,13 +102,13 @@ class DLLOPT CEvents: public SnmpSynchronized {
   virtual bool GetFdArray(struct pollfd *readfds, int &remaining) = 0;
   virtual int HandleEvents(const struct pollfd *readfds, const int fds) = 0;
 #else
-  virtual void GetFdSets(int &maxfds, fd_set &readfds, fd_set &writefds,
-			   fd_set &exceptfds) = 0;
+  virtual void GetFdSets(int &maxfds, fd_my_set &readfds, fd_my_set &writefds,
+			   fd_my_set &exceptfds) = 0;
   // process events pending on the active file descriptors
   virtual int HandleEvents(const int maxfds,
-			   const fd_set &readfds,
-			   const fd_set &writefds,
-			   const fd_set &exceptfds) = 0;
+			   const fd_my_set &readfds,
+			   const fd_my_set &writefds,
+			   const fd_my_set &exceptfds) = 0;
 #endif
   // return number of outstanding messages
   virtual int GetCount() = 0;
@@ -144,14 +144,14 @@ class DLLOPT CEventList: public SnmpSynchronized {
   int HandleEvents(const struct pollfd *readfds, const int fds);
 #else
  // set up paramters for select
-  void GetFdSets(int &maxfds, fd_set &readfds, fd_set &writefds,
-		 fd_set &exceptfds);
+  void GetFdSets(int &maxfds, fd_my_set &readfds, fd_my_set &writefds,
+		 fd_my_set &exceptfds);
 
   // process events pending on the active file descriptors
   int HandleEvents(const int maxfds,
-		   const fd_set &readfds,
-		   const fd_set &writefds,
-		   const fd_set &exceptfds);
+		   const fd_my_set &readfds,
+		   const fd_my_set &writefds,
+		   const fd_my_set &exceptfds);
 #endif
 
   // return number of outstanding messages

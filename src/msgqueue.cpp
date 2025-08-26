@@ -51,6 +51,7 @@ char msgqueue_version[]="#(@) SNMP++ $Id$";
 
 #include <libsnmp.h>
 
+#include "include/snmp_pp/selecttopool.h"
 //-----[ includes ]----------------------------------------------------
 
 //----[ snmp++ includes ]----------------------------------------------
@@ -695,8 +696,8 @@ int CSNMPMessageQueue::HandleEvents(const struct pollfd *readfds,
 
 #else // HAVE_POLL_SYSCALL
 
-void CSNMPMessageQueue::GetFdSets(int &maxfds, fd_set &readfds,
-                                  fd_set &, fd_set &)
+void CSNMPMessageQueue::GetFdSets(int &maxfds, fd_my_set &readfds,
+                                  fd_my_set &, fd_my_set &)
 {
   SnmpSynchronize _synchronize(*this); // REENTRANT
   CSNMPMessageQueueElt *msgEltPtr = m_head.GetNext();
@@ -704,7 +705,7 @@ void CSNMPMessageQueue::GetFdSets(int &maxfds, fd_set &readfds,
   while (msgEltPtr)
   {
     SnmpSocket sock = msgEltPtr->GetMessage()->GetSocket();
-    FD_SET(sock, &readfds);
+    MY_FD_SET(sock, &readfds);
     if (maxfds < SAFE_INT_CAST(sock+1))
       maxfds = SAFE_INT_CAST(sock+1);
     msgEltPtr = msgEltPtr->GetNext();
@@ -712,23 +713,23 @@ void CSNMPMessageQueue::GetFdSets(int &maxfds, fd_set &readfds,
 }
 
 int CSNMPMessageQueue::HandleEvents(const int maxfds,
-                                    const fd_set &readfds,
-                                    const fd_set &,
-                                    const fd_set &)
+                                    const fd_my_set &readfds,
+                                    const fd_my_set &,
+                                    const fd_my_set &)
 {
-  fd_set snmp_readfds, snmp_writefds, snmp_errfds;
+  fd_my_set snmp_readfds, snmp_writefds, snmp_errfds;
   int tmp_maxfds = maxfds;
 
   // Only read from our own fds
-  FD_ZERO(&snmp_readfds);
-  FD_ZERO(&snmp_writefds);
-  FD_ZERO(&snmp_errfds);
+  MY_FD_ZERO(&snmp_readfds);
+  MY_FD_ZERO(&snmp_writefds);
+  MY_FD_ZERO(&snmp_errfds);
   GetFdSets(tmp_maxfds, snmp_readfds, snmp_writefds, snmp_errfds);
 
   for (int fd = 0; fd < maxfds; fd++)
   {
-    if ((FD_ISSET(fd, &snmp_readfds)) &&
-        (FD_ISSET(fd, (fd_set*)&readfds)))
+    if ((MY_FD_CONTAINS(fd, &snmp_readfds)) &&
+        (MY_FD_ISSET(fd, (fd_my_set*)&readfds)))
     {
       UdpAddress fromaddress;
       Pdu tmppdu;

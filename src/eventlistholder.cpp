@@ -26,7 +26,7 @@
   _##########################################################################*/
 
 #include <libsnmp.h>
-
+#include "snmp_pp/selecttopool.h"
 #include "snmp_pp/eventlistholder.h"
 #include "snmp_pp/eventlist.h"
 #include "snmp_pp/msgqueue.h"
@@ -205,9 +205,9 @@ int EventListHolder::SNMPProcessEvents(const int max_block_milliseconds)
 int EventListHolder::SNMPProcessPendingEvents()
 {
   int maxfds;
-  fd_set readfds;
-  fd_set writefds;
-  fd_set exceptfds;
+  fd_my_set readfds;
+  fd_my_set writefds;
+  fd_my_set exceptfds;
   int nfound = 0;
   struct timeval fd_timeout;
   msec now(0, 0);
@@ -225,7 +225,7 @@ int EventListHolder::SNMPProcessPendingEvents()
     // Set up Select
     m_eventList.GetFdSets(maxfds, readfds, writefds, exceptfds);
 
-    nfound = select(maxfds, &readfds, &writefds, &exceptfds, &fd_timeout);
+    nfound = my_select(maxfds, &readfds, &writefds, &exceptfds, &fd_timeout);
 
     now.refresh();
 
@@ -255,9 +255,9 @@ int EventListHolder::SNMPProcessPendingEvents()
 int EventListHolder::SNMPProcessEvents(const int max_block_milliseconds)
 {
   int maxfds;
-  fd_set readfds;
-  fd_set writefds;
-  fd_set exceptfds;
+  fd_my_set readfds;
+  fd_my_set writefds;
+  fd_my_set exceptfds;
   struct timeval fd_timeout;
   msec now; // automatically calls msec::refresh()
   msec sendTime;
@@ -281,7 +281,7 @@ int EventListHolder::SNMPProcessEvents(const int max_block_milliseconds)
   if ((maxfds == 0) && (fd_timeout.tv_sec > 5))
     fd_timeout.tv_sec = 5; /* sleep at max 5.99 seconds */
 
-  select(maxfds, &readfds, &writefds, &exceptfds, &fd_timeout);
+  my_select(maxfds, &readfds, &writefds, &exceptfds, &fd_timeout);
 
   status = SNMPProcessPendingEvents();
 
@@ -322,9 +322,9 @@ bool EventListHolder::GetFdArray(struct pollfd *readfds, int &remaining)
 #else
 
 void EventListHolder::SNMPGetFdSets(int    &maxfds,
-				    fd_set &readfds,
-				    fd_set &writefds,
-				    fd_set &exceptfds)
+				    fd_my_set &readfds,
+				    fd_my_set &writefds,
+				    fd_my_set &exceptfds)
 {
   m_eventList.GetFdSets(maxfds, readfds, writefds, exceptfds);
 }

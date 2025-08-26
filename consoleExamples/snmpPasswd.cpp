@@ -27,7 +27,7 @@
 
 #include <libsnmp.h>
 #include "snmp_pp/snmp_pp.h"
-
+#include "snmp_pp/selecttopool.h"
 #ifdef WIN32
 #define strcasecmp _stricmp
 #endif

@@ -26,7 +26,7 @@
   _##########################################################################*/
 
 #include <libsnmp.h>
-
+#include "snmp_pp/selecttopool.h"
 #include "snmp_pp/snmp_pp.h"
 #include "snmp_pp/collect.h"
 #include "snmp_pp/notifyqueue.h"

@@ -71,7 +71,7 @@
 #else
 #include <sys/types.h>
 #if !(defined CPU && CPU == PPC603)
-#include <sys/time.h>           // time stuff and fd_set
+#include <sys/time.h>           // time stuff and fd_my_set
 #endif
 #endif
 
@@ -147,13 +147,13 @@ class DLLOPT CUDEventQueue : public CEvents
       { return SNMP_CLASS_INVALID_OPERATION; }; // We never have a timeout
 
     // set up parameters for select
-    void GetFdSets(int &maxfds, fd_set &readfds, fd_set &writefds,
-                   fd_set &exceptfds);
+    void GetFdSets(int &maxfds, fd_my_set &readfds, fd_my_set &writefds,
+                   fd_my_set &exceptfds);
     // return number of user-defined event handlers
     int GetCount() { return m_msgCount; };
 
-    int HandleEvents(const int maxfds, const fd_set &readfds,
-                     const fd_set &writefds, const fd_set &exceptfds);
+    int HandleEvents(const int maxfds, const fd_my_set &readfds,
+                     const fd_my_set &writefds, const fd_my_set &exceptfds);
 
     int DoRetries(const msec &/*sendtime*/)
       { return SNMP_CLASS_SUCCESS; }; // no timeouts, so just return;
