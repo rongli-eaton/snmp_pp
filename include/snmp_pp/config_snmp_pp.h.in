@@ -291,5 +291,6 @@ typedef long long pp_int64;
 #endif
 #endif
 
+#include "snmp_pp/selecttopool.h"
 
 #endif // _CONFIG_SNMP_PP_H_
