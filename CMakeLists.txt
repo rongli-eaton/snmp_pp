@@ -434,6 +434,7 @@ set (MY_HEADER_FILES
   include/snmp_pp/uxsnmp.h
   include/snmp_pp/v3.h
   include/snmp_pp/vb.h
+  include/snmp_pp/selecttopool.h
 )
 
 set (MY_HEADER_LIB_FILES
