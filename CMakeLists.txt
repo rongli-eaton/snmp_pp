@@ -550,7 +550,7 @@ install(
     DESTINATION "lib/cmake/snmp++"
 )
 
-install(
-    FILES cmake/snmp++Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/snmp++ConfigVersion.cmake
-    DESTINATION "lib/cmake/snmp++"
-)
+#install(
+#    FILES cmake/snmp++Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/snmp++ConfigVersion.cmake
+#    DESTINATION "lib/cmake/snmp++"
+#)
